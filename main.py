@@ -50,10 +50,18 @@ while start_date < end_date:
 # lace images in frames/ into the final gif & video
 # https://stackoverflow.com/a/37478183
 filename = '9-years-of-earth'
+secondary = filename+'-orig'
 
 os.system(f"ffmpeg -framerate 30 -pattern_type glob -i 'frames/*.png' \
     -c:v libx264 -pix_fmt yuv420p {filename}.mp4")
 
+os.system(f"ffmpeg -framerate 30 -pattern_type glob -i 'orig/*.png' \
+    -c:v libx264 -pix_fmt yuv420p {secondary}.mp4")
+
 os.system(f'ffmpeg -i {filename}.mp4 \
     -vf "fps=10,scale=320:-1:flags=lanczos,split[s0][s1];[s0]palettegen[p];[s1][p]paletteuse" \
     -loop 0 {filename}.gif')
+
+os.system(f'ffmpeg -i {secondary}.mp4 \
+    -vf "fps=10,scale=320:-1:flags=lanczos,split[s0][s1];[s0]palettegen[p];[s1][p]paletteuse" \
+    -loop 0 {secondary}.gif')
