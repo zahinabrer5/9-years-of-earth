@@ -1,5 +1,7 @@
 # 9-years-of-earth
 
+A Python script that makes a cool video with almost 9 years of pictures of Earth (August 31, 2015 to August 2024).
+
 ## Installation
 
 1. Requires `ffmpeg=n7.0.1`.
