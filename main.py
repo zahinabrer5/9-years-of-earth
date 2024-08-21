@@ -4,6 +4,7 @@ import random
 import requests
 import string
 import sys
+import time
 from datetime import datetime as dt
 from dotenv import load_dotenv
 from PIL import Image
@@ -26,7 +27,7 @@ def process_img(img_src, img_dest, title, fontsize, padding):
 
 load_dotenv(); api_key = os.getenv('API_KEY')
 start_date = datetime.datetime(2015, 8, 31)
-# start_date = datetime.datetime(2024, 6, 6)
+# start_date = datetime.datetime(2016, 6, 27)
 end_date = dt.today()
 
 while start_date < end_date:
@@ -34,10 +35,10 @@ while start_date < end_date:
     url = f'https://api.nasa.gov/EPIC/api/natural/date/{'-'.join(fmt_date)}?api_key={api_key}'
 
     # ensure r contains a valid 200 response before continuing
-    r = requests.get(url, headers={'User-agent': rand_string(8)})
+    r = requests.get(url, headers={'User-agent': rand_string(16)})
     i = 0
     while r.status_code != 200 and i < 10:
-        r = requests.get(url, headers={'User-agent': rand_string(16)})
+        r = requests.get(url, headers={'User-agent': rand_string(32)})
         i += 1
     if i == 10:
         start_date += datetime.timedelta(days=1)
@@ -64,6 +65,7 @@ while start_date < end_date:
         process_img(save_path, dest_path, text, 100, 75)
 
     start_date += datetime.timedelta(days=1)
+    time.sleep(1)
 
 # lace images in frames/ into the final gif & video
 # https://stackoverflow.com/a/37478183
@@ -77,13 +79,3 @@ os.system(f"ffmpeg -framerate 30 -pattern_type glob -i 'frames/*.png' \
 print('Making mp4 from orig/')
 os.system(f"ffmpeg -framerate 30 -pattern_type glob -i 'orig/*.png' \
     -c:v libx264 -pix_fmt yuv420p {secondary}.mp4")
-
-print('Making gif from frames/')
-os.system(f'ffmpeg -i {filename}.mp4 \
-    -vf "fps=10,scale=320:-1:flags=lanczos,split[s0][s1];[s0]palettegen[p];[s1][p]paletteuse" \
-    -loop 0 {filename}.gif')
-
-print('Making gif from orig/')
-os.system(f'ffmpeg -i {secondary}.mp4 \
-    -vf "fps=10,scale=320:-1:flags=lanczos,split[s0][s1];[s0]palettegen[p];[s1][p]paletteuse" \
-    -loop 0 {secondary}.gif')
