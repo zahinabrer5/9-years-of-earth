@@ -13,7 +13,7 @@ from PIL import ImageDraw
 
 # https://stackoverflow.com/a/2257449
 def rand_string(N):
-    return ''.join(random.choices(string.ascii_uppercase + string.ascii_lowercase + string.digits, k=N))
+    return ''.join(random.choices(string.ascii_letters + string.digits + string.punctuation, k=N))
 
 def process_img(img_src, img_dest, title, fontsize, padding):
     img = Image.open(img_src, 'r')
