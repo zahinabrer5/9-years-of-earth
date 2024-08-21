@@ -26,7 +26,7 @@ def process_img(img_src, img_dest, title, fontsize, padding):
 
 load_dotenv(); api_key = os.getenv('API_KEY')
 start_date = datetime.datetime(2015, 8, 31)
-# start_date = datetime.datetime(2015, 9, 5)
+# start_date = datetime.datetime(2024, 6, 6)
 end_date = dt.today()
 
 while start_date < end_date:
@@ -47,19 +47,19 @@ while start_date < end_date:
     for row in response:
         refmt_date = '/'.join(fmt_date.split('-'))
         filename = row['image']
+        actual_date = row['date'].replace(' ', '_')
         image_url = f'https://api.nasa.gov/EPIC/archive/natural/{refmt_date}/png/{filename}.png?api_key={api_key}'
 
         s = filename[8:] # strip off 'epic_1b_' from start of string
-        fmt_datetime = '-'.join([s[:4], s[4:6], s[6:8]]) + '_' + ':'.join([s[8:10], s[10:12], s[12:14]])
-        save_path = os.path.join(sys.path[0]+'/orig/', fmt_datetime+'.png')
+        save_path = os.path.join(sys.path[0]+'/orig/', actual_date+'.png')
 
         # save image_url to save_path
         print('Saving to '+save_path)
         open(save_path, 'wb').write(requests.get(image_url).content)
 
-        # make copy in frames/ & edit with Pillow (add fmt_datetime to bottom centre of image)
-        text = fmt_datetime.replace('_', ' ')
-        dest_path = os.path.join(sys.path[0]+'/frames/', fmt_datetime+'.png')
+        # make copy in frames/ & edit with Pillow (add actual_date to bottom centre of image)
+        text = actual_date.replace('_', ' ')
+        dest_path = os.path.join(sys.path[0]+'/frames/', actual_date+'.png')
         print('Saving to '+dest_path)
         process_img(save_path, dest_path, text, 100, 75)
 
