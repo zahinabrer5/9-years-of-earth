@@ -19,15 +19,18 @@ def process_img(img_src, img_dest, title, fontsize, padding):
     img = Image.open(img_src, 'r')
     draw = ImageDraw.Draw(img)
     w, h = img.size
-    font = ImageFont.truetype("/usr/share/fonts/TTF/FiraCode-Regular.ttf", fontsize)
+    font = ImageFont.truetype('/usr/share/fonts/TTF/FiraCode-Regular.ttf', fontsize)
     text_w, text_h = draw.textlength(title, font), fontsize
     draw.text(((w - text_w) // 2, h - text_h - padding), title, (255,255,255), font=font)
     img.save(img_dest)
     return img_src
 
+def localtime():
+    return time.strftime('%H:%M:%S', time.localtime())
+
 load_dotenv(); api_key = os.getenv('API_KEY')
-start_date = datetime.datetime(2015, 8, 31)
-# start_date = datetime.datetime(2016, 6, 27)
+# start_date = datetime.datetime(2015, 8, 31)
+start_date = datetime.datetime(2016, 6, 27)
 end_date = dt.today()
 
 while start_date < end_date:
@@ -55,13 +58,13 @@ while start_date < end_date:
         save_path = os.path.join(sys.path[0]+'/orig/', actual_date+'.png')
 
         # save image_url to save_path
-        print('Saving to '+save_path)
+        print(localtime()+': Saving to '+save_path)
         open(save_path, 'wb').write(requests.get(image_url).content)
 
         # make copy in frames/ & edit with Pillow (add actual_date to bottom centre of image)
         text = actual_date.replace('_', ' ')
-        dest_path = os.path.join(sys.path[0]+'/frames/', actual_date+'.png')
-        print('Saving to '+dest_path)
+        dest_path = save_path.replace('orig', 'frames')
+        print(localtime()+': Saving to '+dest_path)
         process_img(save_path, dest_path, text, 100, 75)
 
     start_date += datetime.timedelta(days=1)
