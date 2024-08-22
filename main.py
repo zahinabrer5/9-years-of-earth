@@ -29,8 +29,8 @@ def localtime():
     return time.strftime('%H:%M:%S', time.localtime())
 
 load_dotenv(); api_key = os.getenv('API_KEY')
-# start_date = datetime.datetime(2015, 8, 31)
-start_date = datetime.datetime(2016, 6, 27)
+start_date = datetime.datetime(2015, 8, 31)
+# start_date = datetime.datetime(2019, 6, 27)
 end_date = dt.today()
 
 while start_date < end_date:
@@ -68,9 +68,9 @@ while start_date < end_date:
         process_img(save_path, dest_path, text, 100, 75)
 
     start_date += datetime.timedelta(days=1)
-    time.sleep(1)
+    # time.sleep(1)
 
-# lace images in frames/ into the final gif & video
+# lace images in frames/ into the final video
 # https://stackoverflow.com/a/37478183
 filename = '9-years-of-earth'
 secondary = filename+'-orig'
