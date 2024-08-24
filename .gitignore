@@ -3,3 +3,4 @@ frames/
 orig/
 test/
 .env
+*.mp4

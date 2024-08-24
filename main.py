@@ -30,7 +30,7 @@ def localtime():
 
 load_dotenv(); api_key = os.getenv('API_KEY')
 start_date = datetime.datetime(2015, 8, 31)
-# start_date = datetime.datetime(2019, 6, 27)
+# start_date = datetime.datetime(2024, 8, 22)
 end_date = dt.today()
 
 while start_date < end_date:
@@ -38,16 +38,17 @@ while start_date < end_date:
     url = f'https://api.nasa.gov/EPIC/api/natural/date/{'-'.join(fmt_date)}?api_key={api_key}'
 
     # ensure r contains a valid 200 response before continuing
-    r = requests.get(url, headers={'User-agent': rand_string(16)})
+    r = requests.get(url, headers={'User-agent': rand_string(32)})
     i = 0
     while r.status_code != 200 and i < 10:
-        r = requests.get(url, headers={'User-agent': rand_string(32)})
+        r = requests.get(url, headers={'User-agent': rand_string(64)})
         i += 1
     if i == 10:
         start_date += datetime.timedelta(days=1)
         continue
 
     response = list(reversed(r.json()));
+    # response = list(r.json());
     for row in response:
         refmt_date = '/'.join(fmt_date.split('-'))
         filename = row['image']
@@ -60,6 +61,7 @@ while start_date < end_date:
         # save image_url to save_path
         print(localtime()+': Saving to '+save_path)
         open(save_path, 'wb').write(requests.get(image_url).content)
+        # time.sleep(2)
 
         # make copy in frames/ & edit with Pillow (add actual_date to bottom centre of image)
         text = actual_date.replace('_', ' ')
@@ -68,17 +70,19 @@ while start_date < end_date:
         process_img(save_path, dest_path, text, 100, 75)
 
     start_date += datetime.timedelta(days=1)
-    # time.sleep(1)
+    # time.sleep(3)
 
 # lace images in frames/ into the final video
 # https://stackoverflow.com/a/37478183
 filename = '9-years-of-earth'
-secondary = filename+'-orig'
+# secondary = filename+'-orig'
 
 print('Making mp4 from frames/')
 os.system(f"ffmpeg -framerate 30 -pattern_type glob -i 'frames/*.png' \
     -c:v libx264 -pix_fmt yuv420p {filename}.mp4")
 
+"""
 print('Making mp4 from orig/')
 os.system(f"ffmpeg -framerate 30 -pattern_type glob -i 'orig/*.png' \
     -c:v libx264 -pix_fmt yuv420p {secondary}.mp4")
+"""
