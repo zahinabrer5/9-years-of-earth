@@ -5,11 +5,19 @@ A Python script that makes a cool video with almost 9 years of pictures of Earth
 ## Installation
 
 1. Requires `ffmpeg=n7.0.1`.
+
 2.
 ```bash
 $ pip install requirements.txt
 ```
-3.
+
+3. Make a .env file containing the following line
+```
+API_KEY=(your API key from https://api.nasa.gov/)
+```
+... or just put your API key directly into the `api_key =` line in `main.py`
+
+4.
 ```bash
 $ python main.py
 ```
